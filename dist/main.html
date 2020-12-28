@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Cloth Animation</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+
+</head>
+<body>
+
+<script type="text/x-vertex-shader" id="vs">
+attribute vec3 a_position;
+attribute vec3 a_normal;
+attribute vec2 a_texcoord;
+
+varying vec3 v_view;
+varying vec3 v_light;
+varying vec3 v_normal;
+varying vec2 v_texcoord;
+
+void main() {
+	vec4 p = u_modelView * vec4(a_position, 1.0);
+	v_normal = mat3(u_modelView) * a_normal;
+	v_view = -p.xyz;
+	v_light = u_lightPos - p.xyz;
+	v_texcoord = a_texcoord;
+	gl_Position = u_proj * p;
+}
+</script>
+
+<script type="text/x-fragment-shader" id="fs">
+varying vec3 v_view;
+varying vec3 v_light;
+varying vec3 v_normal;
+varying vec2 v_texcoord;
+uniform sampler2D u_albedo;
+void main() {
+	vec3 n = normalize(v_normal);
+	vec3 l = normalize(v_light);
+	vec3 v = normalize(v_view);
+	vec3 r = reflect(-l, n);
+	vec3 albedo = pow(texture2D(u_albedo, v_texcoord).xyz, vec3(2.2));
+	vec3 diffuse = max(dot(n, l), 0.0)*albedo;
+	vec3 specular = vec3(0.0);//pow(max(dot(r, v), 0.0), 30.0) * u_lightColor;
+	vec3 color = saturate(u_ambient * albedo + diffuse + specular);
+	gl_FragColor = vec4(pow(color, vec3(1.0/2.2)), 1.0);
+}
+</script>
+
+<canvas></canvas>
+
+  <script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/98205/simutil.js'></script><script  src="./main.js"></script>
+
+</body>
+</html>

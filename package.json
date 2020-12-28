@@ -1,0 +1,22 @@
+{
+  "name": "laborator2",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "gl-matrix": "^3.3.0",
+    "raw-loader": "^4.0.1",
+    "url-loader": "^4.1.1",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12"
+  },
+  "main": "webpack.config.js",
+  "description": "",
+  "dependencies": {}
+}
